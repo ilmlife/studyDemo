@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+	<package name="studyAction" extends="struts-default" namespace="/studyAction">
+		<action name="action1" class="com.ilmlife.action.StudyAction1">
+			<result name="success">/action.jsp</result>
+		</action>
+		<action name="action1Add" class="com.ilmlife.action.StudyAction1" method="add">
+			<result name="success">/action.jsp</result>
+		</action>
+		<action name="action2" class="com.ilmlife.action.StudyAction2">
+			<result>/action.jsp</result>
+		</action>
+		<!-- 1代表第一个*号,以此类推 -->
+		<action name="action3*" class="com.ilmlife.action.StudyAction3" method="{1}">
+			<result>/action.jsp</result>
+		</action>
+		<action name="params*" class="com.ilmlife.action.ParamsAction" method="{1}">
+			<result>/action.jsp</result>
+		</action>
+		<action name="mdparams*" class="com.ilmlife.action.MDParamsAction" method="{1}">
+			<result>/action.jsp</result>
+		</action>
+		<action name="web*Element*" class="com.ilmlife.action.WebElement{1}Action" method="{2}">
+			<result>/action.jsp</result>
+		</action>
+	</package>
+</struts>
