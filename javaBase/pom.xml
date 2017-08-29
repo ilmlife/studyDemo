@@ -15,6 +15,13 @@
   </properties>
 
   <dependencies>
+  	<!-- https://mvnrepository.com/artifact/org.apache.nifi/nifi-client-dto -->
+	<dependency>
+	    <groupId>org.apache.nifi</groupId>
+	    <artifactId>nifi-client-dto</artifactId>
+	    <version>1.2.0</version>
+	</dependency>
+  
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
