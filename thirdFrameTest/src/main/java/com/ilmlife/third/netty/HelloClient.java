@@ -1,15 +1,17 @@
 package com.ilmlife.third.netty;
 
+import com.ilmlife.third.netty.codec.MessageCodec;
 import com.ilmlife.third.netty.handler.HelloClientHandler;
+import com.ilmlife.third.netty.message.MessageBuildler;
 
 import io.netty.bootstrap.Bootstrap;
-import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 
 /**
  * 
@@ -26,17 +28,19 @@ public class HelloClient {
 		b.group(workgroup).channel(NioSocketChannel.class).handler(new ChannelInitializer<SocketChannel>() {
 			@Override
 			protected void initChannel(SocketChannel sc) throws Exception {
+				sc.pipeline().addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 0, Integer.SIZE / 8, - Integer.SIZE / 8, 0));
+				sc.pipeline().addLast(new MessageCodec());
 				sc.pipeline().addLast(new HelloClientHandler());
 			}
 		});
 
 		ChannelFuture channelFuture = b.connect(serverIp, serverPort).sync();
 
-		channelFuture.channel().writeAndFlush(Unpooled.copiedBuffer("hello world! 111".getBytes()));
-		channelFuture.channel().writeAndFlush(Unpooled.copiedBuffer("hello world! 222".getBytes()));
-		channelFuture.channel().writeAndFlush(Unpooled.copiedBuffer("hello world! 333".getBytes()));
+		channelFuture.channel().writeAndFlush(MessageBuildler.newMessage().withMsg("hello world! 111").build());
+		channelFuture.channel().writeAndFlush(MessageBuildler.newMessage().withMsg("hello world! 222").build());
+		channelFuture.channel().writeAndFlush(MessageBuildler.newMessage().withMsg("hello world! 333").build());
 		channelFuture.channel().closeFuture().sync();
-		workgroup.shutdownGracefully();
+//		workgroup.shutdownGracefully();
 	}
 
 }

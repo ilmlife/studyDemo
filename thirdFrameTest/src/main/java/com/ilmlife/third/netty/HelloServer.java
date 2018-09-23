@@ -1,5 +1,6 @@
 package com.ilmlife.third.netty;
 
+import com.ilmlife.third.netty.codec.MessageCodec;
 import com.ilmlife.third.netty.handler.HelloServerHandler;
 
 import io.netty.bootstrap.ServerBootstrap;
@@ -10,6 +11,7 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 
 /**
  * 
@@ -32,6 +34,8 @@ public class HelloServer {
 					.childHandler(new ChannelInitializer<SocketChannel>() {
 						@Override
 						protected void initChannel(SocketChannel ch) throws Exception {
+							ch.pipeline().addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 0, Integer.SIZE / 8, - Integer.SIZE / 8, 0));
+							ch.pipeline().addLast(new MessageCodec());
 							ch.pipeline().addLast(new HelloServerHandler());
 						}
 					}).option(ChannelOption.SO_BACKLOG, 128).childOption(ChannelOption.SO_KEEPALIVE, true);
