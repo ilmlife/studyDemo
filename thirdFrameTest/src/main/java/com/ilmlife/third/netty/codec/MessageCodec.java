@@ -20,6 +20,8 @@ public class MessageCodec extends MessageToMessageCodec<ByteBuf, Message> {
 	protected void encode(ChannelHandlerContext ctx, Message msg, List<Object> out) throws Exception {
 		ByteBuf byteBuf = ByteBufAllocator.DEFAULT.buffer();
 		byteBuf.writeInt(msg.getLength());
+		byteBuf.writeInt(msg.getVersion());
+		byteBuf.writeInt(msg.getRequestId());
 		byteBuf.writeBytes(msg.serialization());
 		out.add(byteBuf);
 	}
@@ -27,9 +29,10 @@ public class MessageCodec extends MessageToMessageCodec<ByteBuf, Message> {
 	@Override
 	protected void decode(ChannelHandlerContext ctx, ByteBuf msg, List<Object> out) throws Exception {
 		Message message = new Message();
-		int length = msg.readInt();
-		message.setLength(length);
-		byte[] dst = new byte[length - Message.HEAD_LENGTH];
+		message.setLength(msg.readInt());
+		message.setVersion(msg.readInt());
+		message.setRequestId(msg.readInt());
+		byte[] dst = new byte[message.getLength() - Message.HEAD_LENGTH];
 		msg.readBytes(dst);
 		message.setMsg(new String(dst));
 		out.add(message);

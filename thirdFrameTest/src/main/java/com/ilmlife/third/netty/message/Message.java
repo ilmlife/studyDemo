@@ -2,13 +2,31 @@ package com.ilmlife.third.netty.message;
 
 /**
  * 
- * @author ilmlife E-Mail：ilmlife@126.com 
- * @version1.0 创建时间：2018年9月21日 下午8:46:54
+ * @author ilmlife E-Mail：ilmlife@126.com
+ * @version 1.0 创建时间：2018年9月21日 下午8:46:54
  */
 public class Message {
-	public static final int HEAD_LENGTH = Integer.SIZE / 8;
-	private int length;
-	private String msg;
+	public static final int	HEAD_LENGTH	= Integer.SIZE / 8 + Integer.SIZE / 8 + Integer.SIZE / 8;
+	private int				length;
+	private int				version;
+	private int				requestId;
+	private String			msg;
+
+	public int getRequestId() {
+		return requestId;
+	}
+
+	public void setRequestId(int requestId) {
+		this.requestId = requestId;
+	}
+
+	public int getVersion() {
+		return version;
+	}
+
+	public void setVersion(int version) {
+		this.version = version;
+	}
 
 	public int getLength() {
 		return length;
@@ -32,7 +50,7 @@ public class Message {
 
 	@Override
 	public String toString() {
-		return this.getMsg();
+		return this.getRequestId() + "|" + this.getMsg();
 	}
-	
+
 }
